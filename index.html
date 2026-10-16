@@ -1,0 +1,160 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Urna Virtual - Disputa ao Vivo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080b14;color:white;font-family:Arial,sans-serif}
+main{max-width:900px;margin:auto;padding:12px}
+.banner{text-align:center;background:#111a2b;border:2px solid gold;border-radius:12px;padding:12px;font-size:22px;font-weight:bold}
+.top{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:18px 8px;background:linear-gradient(110deg,#06371f,#101522,#4b0b1c);border:1px solid #64748b;border-radius:14px;margin-top:10px}
+.side{text-align:center;min-width:0}
+.face{font-size:45px}
+h2{font-size:clamp(14px,3vw,24px);margin:5px 0}
+.green{color:#19f05f}.red{color:#ff4965}
+.score{font-size:clamp(30px,7vw,54px);font-weight:bold}
+.percent{font-size:25px;font-weight:bold;margin:5px}
+.gift{font-size:11px;font-weight:bold;line-height:1.5}
+.vs{font-size:28px;font-weight:bold;color:gold}
+.progress{display:flex;height:22px;border:2px solid white;border-radius:20px;overflow:hidden;margin:14px 0}
+#greenBar{width:50%;background:#19e65c}
+#redBar{width:50%;background:#ff2949}
+.machine{background:linear-gradient(135deg,#f5f6f8,#aeb8c7,#e5e9ef);color:#111827;border:3px solid white;border-radius:20px;padding:12px}
+.head{display:flex;justify-content:space-between;gap:8px;text-align:center;font-weight:bold;margin-bottom:12px}
+.machineBody{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+.screen{background:#dce6f5;border:8px solid #141a24;border-radius:8px;padding:8px}
+.screen h3{margin:4px 0 10px}
+.candidate{display:grid;grid-template-columns:30px 55px 1fr;gap:6px;align-items:center;background:white;padding:7px;margin:8px 0;border:1px solid #9ba9bc;border-radius:7px}
+.num{font-size:24px;font-weight:bold}
+.portrait{height:58px;display:grid;place-items:center;background:#087c3b;color:white;font-size:30px;border-radius:5px}
+.portrait.lula{background:#a71932}
+.name{font-size:clamp(11px,2.5vw,20px);font-weight:bold;overflow-wrap:anywhere}
+.mini{font-size:12px;font-weight:bold;margin-top:5px;color:#26344b}
+.miniPct{display:inline-block;background:#087c37;color:white;padding:4px;border-radius:5px;font-weight:bold}
+.miniPct.lula{background:#c61f3c}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;align-content:start;background:#161c27;padding:8px;border-radius:10px}
+.key{padding:12px 2px;background:linear-gradient(#414b5b,#10151e);color:white;border:1px solid #667085;border-radius:6px;font-size:22px;font-weight:bold}
+.blank{background:white;color:#111}.correct{background:orange;color:#111}.confirm{background:#10cb58;color:#111}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+button{cursor:pointer;touch-action:manipulation}
+.action{padding:14px 5px;border:0;border-radius:9px;background:#087b36;color:white;font-size:14px;font-weight:bold}
+.action.lula{background:#a71932}
+.action.reset{grid-column:1/-1;background:#d6ad35;color:#211900}
+.status{text-align:center;font-weight:bold;margin:14px 0}
+.giftbar{text-align:center;padding:13px 7px;background:#101d39;border:2px solid #287dff;border-radius:12px;font-weight:bold}
+.note{font-size:11px;color:#bac5d5;line-height:1.5;text-align:center;margin-top:14px}
+@media(max-width:520px){.machineBody{grid-template-columns:1fr}.top{padding:12px 4px}.face{font-size:35px}.gift{font-size:9px}.actions{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main>
+<div class="banner">👑 DISPUTA AO VIVO 👑</div>
+
+<section class="top">
+<div class="side">
+<div class="face">🌹</div>
+<h2 class="green">BOLSONARO</h2>
+<div class="score" id="greenVotes">0</div>
+<b>PONTOS</b>
+<div class="percent green" id="greenPercent">0,0%</div>
+<div class="gift">ROSA VERMELHA<br>= 1 PONTO SIMULADO</div>
+</div>
+<div class="vs">VS</div>
+<div class="side">
+<div class="face">🤍🌹</div>
+<h2 class="red">LULA</h2>
+<div class="score" id="redVotes">0</div>
+<b>PONTOS</b>
+<div class="percent red" id="redPercent">0,0%</div>
+<div class="gift">ROSA BRANCA<br>= 1 PONTO SIMULADO</div>
+</div>
+</section>
+
+<div class="progress">
+<div id="greenBar"></div><div id="redBar"></div>
+</div>
+
+<section class="machine">
+<div class="head">
+<span>🇧🇷<br>SIMULAÇÃO</span>
+<span>URNA ELETRÔNICA<br>DISPUTA AO VIVO</span>
+<span>AO VIVO</span>
+</div>
+<div class="machineBody">
+<div class="screen">
+<h3>SEU VOTO PARA:</h3>
+<div class="candidate">
+<div class="num">01</div><div class="portrait">🌹</div>
+<div><div class="name">BOLSONARO</div><div class="mini" id="greenMini">0 PONTOS</div><div class="miniPct" id="greenMiniPct">0,0%</div></div>
+</div>
+<div class="candidate">
+<div class="num">02</div><div class="portrait lula">🤍🌹</div>
+<div><div class="name">LULA</div><div class="mini" id="redMini">0 PONTOS</div><div class="miniPct lula" id="redMiniPct">0,0%</div></div>
+</div>
+<div class="mini" style="text-align:center">PLACAR DE ENTRETENIMENTO • NÃO OFICIAL</div>
+</div>
+
+<div class="keypad">
+<button class="key" data-key="1">1</button><button class="key" data-key="2">2</button><button class="key" data-key="3">3</button>
+<button class="key" data-key="4">4</button><button class="key" data-key="5">5</button><button class="key" data-key="6">6</button>
+<button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button>
+<button class="key" data-key="0" style="grid-column:2">0</button>
+<button class="key blank" id="blankBtn">BRANCO</button>
+<button class="key correct" id="correctBtn">CORRIGE</button>
+<button class="key confirm" id="confirmBtn">CONFIRMA</button>
+</div>
+</div>
+</section>
+
+<section class="actions">
+<button class="action" id="greenAdd">🌹 ROSA +1</button>
+<button class="action lula" id="redAdd">🤍🌹 ROSA BRANCA +1</button>
+<button class="action reset" id="resetBtn">↻ ZERAR PLACAR</button>
+</section>
+
+<div class="status" id="status">SIMULAÇÃO PRONTA!</div>
+<div class="giftbar">🎁 PARTICIPE DA DISPUTA ENVIANDO PRESENTES!</div>
+<p class="note">SIMULAÇÃO DE ENTRETENIMENTO. Não é urna oficial, pesquisa ou apuração eleitoral. Não é afiliada ao TSE, TikTok ou aos candidatos. Os pontos são simulados pelos botões; a conexão automática com a TikTok LIVE ainda não está configurada.</p>
+</main>
+
+<script>
+let green=0,red=0,entered='';
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toLocaleString('pt-BR');
+const pct=n=>n.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+
+function render(){
+ const total=green+red;
+ const gp=total?green/total*100:0;
+ const rp=total?red/total*100:0;
+ $('greenVotes').textContent=fmt(green);
+ $('redVotes').textContent=fmt(red);
+ $('greenPercent').textContent=pct(gp);
+ $('redPercent').textContent=pct(rp);
+ $('greenBar').style.width=(total?gp:50)+'%';
+ $('redBar').style.width=(total?rp:50)+'%';
+ $('greenMini').textContent=fmt(green)+' PONTOS';
+ $('redMini').textContent=fmt(red)+' PONTOS';
+ $('greenMiniPct').textContent=pct(gp);
+ $('redMiniPct').textContent=pct(rp);
+ if(total===0)$('status').textContent='SIMULAÇÃO PRONTA!';
+ else if(green===red)$('status').textContent='EMPATE NA SIMULAÇÃO!';
+ else $('status').textContent=green>red?'BOLSONARO ESTÁ À FRENTE NA SIMULAÇÃO.':'LULA ESTÁ À FRENTE NA SIMULAÇÃO.';
+}
+$('greenAdd').onclick=()=>{green++;render()};
+$('redAdd').onclick=()=>{red++;render()};
+$('resetBtn').onclick=()=>{green=0;red=0;entered='';render()};
+document.querySelectorAll('[data-key]').forEach(b=>b.onclick=()=>{
+ entered+=b.dataset.key;
+ $('status').textContent='TECLADO DECORATIVO: '+entered;
+});
+$('blankBtn').onclick=()=>{entered='';$('status').textContent='SELEÇÃO EM BRANCO — SIMULAÇÃO.'};
+$('correctBtn').onclick=()=>{entered=entered.slice(0,-1);$('status').textContent=entered?'TECLADO DECORATIVO: '+entered:'SELEÇÃO CORRIGIDA.'};
+$('confirmBtn').onclick=()=>$('status').textContent='TECLADO DECORATIVO. USE OS BOTÕES PARA SIMULAR PONTOS.';
+render();
+</script>
+</body>
+</html>
